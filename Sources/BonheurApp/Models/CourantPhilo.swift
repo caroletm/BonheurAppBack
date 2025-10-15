@@ -8,20 +8,18 @@
 import Vapor
 import Fluent
 
-final class CourantPhilo : Model, Content, @unchecked Sendable {
+final class CourantPhilo: Model, Content, @unchecked Sendable {
     static let schema = "CourantPhilo"
     
-    @ID(key: .id) var id: UUID?
-    @Field(key: "nom") var nom: String
-    @Field(key: "icon") var icon: String
-    @Field(key: "description") var description: String
+    @ID(key : .id) var id : UUID?
+    @Parent(key : "planetePhilo_Id") var planetePhilo : PlanetePhilo
+    @Field(key : "nom") var nom : String
+    @Field(key : "icon") var icon : String
+    @Field(key : "description") var description : String
     
     init() {}
-    init(id : UUID, nom: String, icon: String, description: String) {
-        
+    init(id : UUID, planetePhiloID : PlanetePhilo.IDValue) {
         self.id = id
-        self.nom = nom
-        self.icon = icon
-        self.description = description
+        self.$planetePhilo.id = planetePhiloID
     }
 }

@@ -18,6 +18,7 @@ final class Souvenir : Model, Content, @unchecked Sendable {
     @Timestamp(key: "date", on: .create) var date: Date?
     @Enum(key: "theme") var theme: SouvenirTheme
     @Enum(key: "type") var type: SouvenirType
+    @Parent(key : "planeteSouvenir_Id") var planeteSouvenir : PlaneteSouvenir
     @Children(for : \.$souvenir) var souvenirsDefi: [SouvenirDefi]
     @Children(for : \.$souvenir) var souvenirsMap: [SouvenirMap]
     
@@ -39,12 +40,14 @@ final class SouvenirDefi: Model, Content, @unchecked Sendable {
     @ID(key: .id) var id: UUID?
     @Field(key: "isValidated") var isValidated: Bool
     @Parent(key: "souvenirId") var souvenir: Souvenir
+    @Parent(key: "souvenirDefi_Id") var mission: Mission
     
     init() {}
-    init(id: UUID, isValidated: Bool, souvenirID: Souvenir.IDValue) {
+    init(id: UUID, isValidated: Bool, souvenirID: Souvenir.IDValue, missionID : Mission.IDValue) {
         self.id = id
         self.isValidated = isValidated
         self.$souvenir.id = souvenirID
+        self.$mission.id = missionID
     }
 }
 
@@ -55,13 +58,16 @@ final class SouvenirMap : Model, Content, @unchecked Sendable {
     @Field(key: "latitude") var latitude: Double
     @Field(key: "longitude") var longitude: Double
     @Parent(key: "souvenirId") var souvenir: Souvenir
+    @Parent(key: "souvenirMap_Id") var mapPoint: MapPoint
     
     init() {}
-    init(id: UUID, latitude: Double, longitude: Double, souvenirID: Souvenir.IDValue) {
+    init(id: UUID, latitude: Double, longitude: Double, souvenirID: Souvenir.IDValue, mapPointID : MapPoint.IDValue) {
+        
         self.id = id
         self.latitude = latitude
         self.longitude = longitude
         self.$souvenir.id = souvenirID
+        self.$mapPoint.id = mapPointID
     }
 }
 

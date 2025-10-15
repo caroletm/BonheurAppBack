@@ -18,3 +18,4 @@ struct CreateMission : AsyncMigration {
         try await db.schema("Mission").delete()
     }
 }
+
