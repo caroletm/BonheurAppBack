@@ -18,6 +18,7 @@ public func configure(_ app: Application) async throws {
     ), as: .mysql)
 
 //    app.migrations.add(CreateTodo())
+    
     app.migrations.add(CreateUser())
     app.migrations.add(UpdateUser())
     app.migrations.add(CreatePlanete())
@@ -48,7 +49,10 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(UpdatePlanetePhilo2())
     app.migrations.add(UpdateMapPoint())
     app.migrations.add(UpdateMission())
-    app.migrations.add(CreateVisite())
+    app.migrations.add(CreateVisite2())
+//    app.migrations.add(CreateVisiteTest())
+    app.migrations.add(UpdateVisite())
+
     
     try await app.autoMigrate()
     

@@ -24,7 +24,8 @@ final class Planete : Model, Content, @unchecked Sendable {
     @Children(for : \.$planete) var planetePhilo: [PlanetePhilo]
     @Children(for : \.$planete) var planeteMission: [PlaneteMission]
     @Children(for : \.$planete) var planeteSouvenir: [PlaneteSouvenir]
-    
+    @Children(for : \.$planete) var visite: [Visite]
+
     init() {}
     init(id : UUID, nom: String, description: String, image: String, onboardingDescription: String, iconOnboarding: String, backgroundPlanete: String, isVisited: Bool) {
         

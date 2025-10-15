@@ -15,6 +15,8 @@ final class User : Model, Content, @unchecked Sendable {
     @Field(key: "email") var email: String
     @Field(key: "nom") var nom: String
     @Field(key: "motDePasse") var motDePasse: String
+    @Children(for : \.$user) var visite: [Visite]
+
     
     init() {}
     init(email : String, nom : String, motDePasse : String) {
