@@ -15,6 +15,6 @@ struct UpdateUser: AsyncMigration {
             .update()
     }
     func revert(on db: any Database) async throws {
-        try await db.schema("users")
+        try await db.schema("users").delete()
     }
 }

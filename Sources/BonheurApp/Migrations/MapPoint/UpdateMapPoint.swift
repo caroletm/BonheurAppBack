@@ -22,3 +22,18 @@ struct UpdateMapPoint : AsyncMigration {
     }
 }
 
+struct UpdateMapPoint2 : AsyncMigration {
+    func prepare(on db: any Database) async throws {
+        try await db.schema("MapPoint")
+        
+            .field("photo", .string)
+            .field("description", .string)
+            .update()
+    }
+    func revert(on db: any Database) async throws {
+        try await db.schema("MapPoint")
+            .deleteField("photo")
+            .deleteField("description")
+            .update()
+    }
+}

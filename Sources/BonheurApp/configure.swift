@@ -52,7 +52,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateVisite2())
 //    app.migrations.add(CreateVisiteTest())
     app.migrations.add(UpdateVisite())
-
+    app.migrations.add(UpdateMapPoint2())
     
     try await app.autoMigrate()
     

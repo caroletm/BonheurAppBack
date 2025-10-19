@@ -14,17 +14,21 @@ final class MapPoint : Model, Content, @unchecked Sendable {
     @ID(key : .id) var id: UUID?
     @Parent(key: "planeteExplo_Id") var planeteExplo: PlaneteExplo
     @Field(key : "nom") var nom : String
+    @Field(key: "photo") var photo : String?
     @Field(key: "theme") var theme : SouvenirTheme
+    @Field(key: "description") var description : String
     @Field(key : "latitude") var latitude: Double
     @Field(key : "longitude") var longitude: Double
     @OptionalChild(for : \.$mapPoint) var souvenirMap : SouvenirMap?
     
     init() {}
-    init(id: UUID, planeteExploID: PlaneteExplo.IDValue, nom: String, theme: SouvenirTheme, latitude: Double, longitude: Double) {
+    init(id: UUID, planeteExploID: PlaneteExplo.IDValue, nom: String, photo: String?, theme: SouvenirTheme, description: String, latitude: Double, longitude: Double) {
         self.id = id
         self.$planeteExplo.id = planeteExploID
         self.nom = nom
+        self.photo = photo
         self.theme = theme
+        self.description = description
         self.latitude = latitude
         self.longitude = longitude
     }
