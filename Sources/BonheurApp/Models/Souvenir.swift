@@ -18,19 +18,22 @@ final class Souvenir : Model, Content, @unchecked Sendable {
     @Timestamp(key: "date", on: .create) var date: Date?
     @Enum(key: "theme") var theme: SouvenirTheme
     @Enum(key: "type") var type: SouvenirType
+    @Parent(key: "user_Id") var user: User
     @Parent(key : "planeteSouvenir_Id") var planeteSouvenir : PlaneteSouvenir
-    @Children(for : \.$souvenir) var souvenirsDefi: [SouvenirDefi]
-    @Children(for : \.$souvenir) var souvenirsMap: [SouvenirMap]
+    @OptionalChild(for : \.$souvenir) var souvenirsDefi: SouvenirDefi?
+    @OptionalChild(for : \.$souvenir) var souvenirsMap: SouvenirMap?
     
     
     init() {}
-    init(id: UUID, nom: String, photo: String, description: String, theme: SouvenirTheme, type: SouvenirType) {
+    init(id: UUID? = nil, nom: String, photo: String, description: String, theme: SouvenirTheme, type: SouvenirType ,userId: User.IDValue,planeteSouvenirId: PlaneteSouvenir.IDValue) {
         self.id = id
         self.nom = nom
         self.photo = photo
         self.description = description
         self.theme = theme
         self.type = type
+        self.$user.id = userId
+        self.$planeteSouvenir.id = planeteSouvenirId
     }
 }
 
@@ -43,7 +46,7 @@ final class SouvenirDefi: Model, Content, @unchecked Sendable {
     @Parent(key: "souvenirDefi_Id") var mission: Mission
     
     init() {}
-    init(id: UUID, isValidated: Bool, souvenirID: Souvenir.IDValue, missionID : Mission.IDValue) {
+    init(id: UUID? = nil, isValidated: Bool, souvenirID: Souvenir.IDValue, missionID : Mission.IDValue) {
         self.id = id
         self.isValidated = isValidated
         self.$souvenir.id = souvenirID
@@ -61,7 +64,7 @@ final class SouvenirMap : Model, Content, @unchecked Sendable {
     @Parent(key: "souvenirMap_Id") var mapPoint: MapPoint
     
     init() {}
-    init(id: UUID, latitude: Double, longitude: Double, souvenirID: Souvenir.IDValue, mapPointID : MapPoint.IDValue) {
+    init(id: UUID? = nil, latitude: Double, longitude: Double, souvenirID: Souvenir.IDValue, mapPointID : MapPoint.IDValue) {
         
         self.id = id
         self.latitude = latitude
