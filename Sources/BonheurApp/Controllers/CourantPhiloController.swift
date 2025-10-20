@@ -1,5 +1,5 @@
 //
-//  MapPointController.swift
+//  CourantPhiloController.swift
 //  BonheurApp
 //
 //  Created by caroletm on 19/10/2025.
@@ -8,9 +8,9 @@
 import Fluent
 import Vapor
 
-struct MapPointController: RouteCollection {
+struct CourantPhiloController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
-        let mapPoints = routes.grouped("mapPoints")
+        let courantsPhilo = routes.grouped("courantsPhilo")
         
 //Ecrire les methodes ici :
 //exemple : citations.get(use : getAllCitations

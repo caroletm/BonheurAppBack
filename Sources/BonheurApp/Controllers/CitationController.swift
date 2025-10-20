@@ -1,16 +1,16 @@
 //
-//  MapPointController.swift
+//  CitationController.swift
 //  BonheurApp
 //
-//  Created by caroletm on 19/10/2025.
+//  Created by caroletm on 17/10/2025.
 //
-
+//
 import Fluent
 import Vapor
 
-struct MapPointController: RouteCollection {
+struct CitationController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
-        let mapPoints = routes.grouped("mapPoints")
+        let citations = routes.grouped("citations")
         
 //Ecrire les methodes ici :
 //exemple : citations.get(use : getAllCitations
