@@ -15,7 +15,7 @@ final class Citation : Model, Content, @unchecked Sendable {
     @Field(key: "text") var text: String
     
     init() {}
-    init(id : UUID, text: String) {
+    init(id : UUID? = nil, text: String) {
         
         self.id = id
         self.text = text
