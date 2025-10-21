@@ -18,8 +18,9 @@ final class Mission: Model, Content, @unchecked Sendable {
 
     
     init() {}
-    init(id: UUID, planeteMissionID: PlaneteMission.IDValue) {
+    init(id: UUID? = nil,nom:String, planeteMissionID: PlaneteMission.IDValue) {
         self.id = id
+        self.nom = nom
         self.$planeteMission.id = planeteMissionID
     }
     

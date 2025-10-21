@@ -12,4 +12,12 @@ func routes(_ app: Application) throws {
 
 //    try app.register(collection: TodoController())
     try app.register(collection: CitationController())
+
+    try app.register(collection: SouvenirController())
+    try app.register(collection: MissionController())
+    try app.register(collection: MapPointController())
+    try app.register(collection: VisiteController())
+    try app.register(collection: UserController())
+    
+    
 }
