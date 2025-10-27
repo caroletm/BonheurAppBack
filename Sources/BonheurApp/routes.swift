@@ -11,6 +11,7 @@ func routes(_ app: Application) throws {
     }
 
 //    try app.register(collection: TodoController())
+    try app.register(collection: CitationController())
 
     try app.register(collection: SouvenirController())
     try app.register(collection: MissionController())
