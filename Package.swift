@@ -4,29 +4,31 @@ import PackageDescription
 let package = Package(
     name: "BonheurApp",
     platforms: [
-       .macOS(.v13)
+        .macOS(.v13)
     ],
     dependencies: [
-        // 💧 A server-side Swift web framework.
+        // 💧 Vapor
         .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
-        // 🗄 An ORM for SQL and NoSQL databases.
+        // 🗄 Fluent + drivers
         .package(url: "https://github.com/vapor/fluent.git", from: "4.9.0"),
-        // 🐬 Fluent driver for MySQL.
         .package(url: "https://github.com/vapor/fluent-mysql-driver.git", from: "4.4.0"),
-        // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
+        .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.5.0"),
+        // 🔵 Swift NIO
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
-        //package FluentSQL
-        .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.0.0"),
-        
+        // 🔐 JWT
+        .package(url: "https://github.com/vapor/jwt.git", from: "4.0.0"),
+        // 🧪 XCTVapor pour les tests
+//        .package(url: "https://github.com/vapor/xctvapor.git", from: "1.5.0"),
     ],
     targets: [
         .executableTarget(
             name: "BonheurApp",
             dependencies: [
-                .product(name: "FluentSQL", package : "fluent-kit"),
+                .product(name: "Vapor", package: "vapor"),
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentMySQLDriver", package: "fluent-mysql-driver"),
-                .product(name: "Vapor", package: "vapor"),
+                .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+                .product(name: "JWT", package: "jwt"),
                 .product(name: "NIOCore", package: "swift-nio"),
                 .product(name: "NIOPosix", package: "swift-nio"),
             ],
@@ -36,7 +38,9 @@ let package = Package(
             name: "BonheurAppTests",
             dependencies: [
                 .target(name: "BonheurApp"),
-                .product(name: "VaporTesting", package: "vapor"),
+                .product(name: "Vapor", package: "vapor"),
+                .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
+//                .product(name: "XCTVapor", package: "xctvapor"), 
             ],
             swiftSettings: swiftSettings
         )

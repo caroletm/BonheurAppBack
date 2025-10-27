@@ -13,3 +13,9 @@ struct VisiteDTO: Content {
     var userId: UUID
     var planeteId: UUID
 }
+struct VisiteStatsDTO: Content {
+    var totalVisites: Int
+    var utilisateursActifs: Int
+    var planetesVisitees: Int
+    var planeteLaPlusVisitee: String
+}

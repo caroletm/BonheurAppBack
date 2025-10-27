@@ -3,19 +3,27 @@ import Fluent
 import FluentMySQLDriver
 import Vapor
 import FluentSQL
+import JWT
+import FluentSQLiteDriver
 
 // configures your application
 public func configure(_ app: Application) async throws {
+    
+    if app.environment == .testing {
+        app.databases.use(.sqlite(.memory), as: .sqlite)
+    } else {
+        app.databases.use(DatabaseConfigurationFactory.mysql(
+            hostname: Environment.get("DATABASE_HOST") ?? "localhost",
+            port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
+            username: Environment.get("DATABASE_USERNAME") ?? "root",
+            password: Environment.get("DATABASE_PASSWORD") ?? "",
+            database: Environment.get("DATABASE_NAME") ?? "BonheurApp"
+        ), as: .mysql)
+    }
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-    app.databases.use(DatabaseConfigurationFactory.mysql(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
-        username: Environment.get("DATABASE_USERNAME") ?? "root",
-        password: Environment.get("DATABASE_PASSWORD") ?? "",
-        database: Environment.get("DATABASE_NAME") ?? "BonheurApp"
-    ), as: .mysql)
+    
 
 //    app.migrations.add(CreateTodo())
     
@@ -53,6 +61,7 @@ public func configure(_ app: Application) async throws {
 //    app.migrations.add(CreateVisiteTest())
     app.migrations.add(UpdateVisite())
     app.migrations.add(UpdateMapPoint2())
+    app.migrations.add(AddRoleToUser())
     
     try await app.autoMigrate()
     
