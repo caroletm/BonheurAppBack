@@ -45,7 +45,7 @@ struct MusiqueController: RouteCollection {
             guard let planeteId = dto.planeteMusiqueId else {
                 throw Abort(.badRequest, reason: "Missing planeteMusqueId")
             }
-        let musique = Musique(id: <#UUID#>, planeteMusicID: planeteId, nom: dto.nom, audio: dto.audio, logo: dto.logo)
+        let musique = Musique(id: UUID(), planeteMusicID: planeteId, nom: dto.nom,  audio: dto.audio, logo: dto.logo)
         
             try await musique.save(on: req.db)
             return MusicDTO(
