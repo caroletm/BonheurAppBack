@@ -15,13 +15,25 @@ final class User : Model, Content, @unchecked Sendable {
     @Field(key: "email") var email: String
     @Field(key: "nom") var nom: String
     @Field(key: "motDePasse") var motDePasse: String
+    @Enum(key: "role") var role: UserRole
     @Children(for : \.$user) var visite: [Visite]
 
     
-    init() {}
-    init(email : String, nom : String, motDePasse : String) {
+    init() {
+        
+    }
+    init(id: UUID? = nil, email : String, nom : String, motDePasse : String, role: UserRole = .user) {
+        self.id = id ?? UUID()
         self.email = email
         self.nom = nom
         self.motDePasse = motDePasse
+        self.role = role
+    }
+    
+    func toDTO() -> UtilisateurDTO{
+        return UtilisateurDTO(
+            id: self.id,
+            email: self.email,
+            nom: self.nom)
     }
 }

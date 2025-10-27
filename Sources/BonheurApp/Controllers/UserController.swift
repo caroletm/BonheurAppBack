@@ -7,17 +7,58 @@
 
 import Vapor
 import Fluent
+import JWT
 
 struct UserController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
             let users = routes.grouped("users")
-            users.get(use: getAll)
-            users.get(":userID", use: getById)
-            users.post(use: create)
-            users.put(":userID", use: update)
-            users.patch(":userID", use: patch)
-            users.delete(":userID", use: delete)
+                users.get(use: getAll)
+                users.post(use: create)
+                users.post("login", use: login)
+        
+            let protectedRoutes = users.grouped(JWTMiddleware())
+                protectedRoutes.get("profile", use : profile)
+                protectedRoutes.put(":userID", use: update)
+                protectedRoutes.patch(":userID", use: patch)
+        
+            users.group(":userID"){ user in
+                user.get( use: getById)
+                user.delete( use: delete)
+            }
+        
+            
         }
+    
+    @Sendable
+    func login(req: Request) async throws -> String {
+        let userData = try req.content.decode(loginRequest.self)
+        
+        guard let user = try await User.query(on: req.db)
+            .filter(\.$email == userData.email)
+            .first() else {
+            throw Abort(.unauthorized, reason: "l' utilisateur nexiste pas")
+        }
+        guard try Bcrypt.verify(userData.motDePasse, created: user.motDePasse) else {
+            throw Abort (.unauthorized, reason: "Mot de passe incorrect")
+        }
+        let payload = UserPayload(id: user.id!)
+        let signer = JWTSigner.hs256(key: "IM_BATMAN")
+        let tokene = try signer.sign(payload)
+        return tokene
+    }
+    
+    @Sendable
+    func profile(req: Request) async throws -> UtilisateurDTO {
+        let payload = try req.auth.require(UserPayload.self)
+        
+        guard let user = try await User.find(payload.id, on: req.db) else {
+            throw Abort(.notFound)
+        }
+        return user.toDTO()
+    }
+    
+    
+    
     
     // GET /users
     func getAll(req: Request) async throws -> [UserDTO] {
@@ -30,15 +71,16 @@ struct UserController: RouteCollection {
         guard let user = try await User.find(req.parameters.get("userID"), on: req.db) else {
             throw Abort(.notFound, reason: "User not found")
         }
-        return UserDTO(id: user.id, email: user.email, nom: user.nom, motDePasse: user.motDePasse)
+        return UserDTO(id: user.id, email: user.email, nom: user.nom, motDePasse: user.motDePasse
+)
     }
     
     // POST /users
-    func create(req: Request) async throws -> UserDTO {
-        let dto = try req.content.decode(UserDTO.self)
-        let user = User(email: dto.email, nom: dto.nom, motDePasse: dto.motDePasse)
+    func create(req: Request) async throws -> UtilisateurDTO {
+        let user = try req.content.decode(User.self)
+        user.motDePasse = try Bcrypt.hash(user.motDePasse)
         try await user.save(on: req.db)
-        return UserDTO(id: user.id, email: user.email, nom: user.nom, motDePasse: user.motDePasse)
+        return user.toDTO()
     }
     
     //PUT /users/:userID
