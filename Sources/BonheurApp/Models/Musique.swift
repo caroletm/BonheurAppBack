@@ -18,7 +18,7 @@ final class Musique: Model, Content, @unchecked Sendable {
     @Field(key : "logo") var logo : String
     
     init() {}
-    init(id : UUID, planeteMusicID : PlaneteMusic.IDValue, nom : String, audio : String, logo : String) {
+    init(id : UUID? = nil, planeteMusicID : PlaneteMusic.IDValue, nom : String, audio : String, logo : String) {
         self.id = id
         self.$planeteMusic.id = planeteMusicID
         self.nom = nom
