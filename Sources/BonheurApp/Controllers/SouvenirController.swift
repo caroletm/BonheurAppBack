@@ -16,9 +16,6 @@ struct SouvenirController: RouteCollection {
         souvenirs.group(":id") { souvenir in
             souvenir.get(use: getSouvenirById)
             
-            //Ecrire les methodes ici :
-            //exemple : citations.get(use : getAllCitations
-            
         }
         
         // GET/souvenirs

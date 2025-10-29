@@ -14,8 +14,8 @@ final class Mission: Model, Content, @unchecked Sendable {
     @ID(key: .id) var id: UUID?
     @Parent(key: "planeteMission_Id") var planeteMission: PlaneteMission
     @Field(key : "nom") var nom : String
-    @OptionalChild(for : \.$mission) var souvenirDefi : SouvenirDefi?
-
+//    @OptionalChild(for : \.$mission) var souvenirDefi : SouvenirDefi?
+    @Children(for : \.$mission) var mission_Id : [SouvenirDefi]
     
     init() {}
     init(id: UUID? = nil,nom:String, planeteMissionID: PlaneteMission.IDValue) {

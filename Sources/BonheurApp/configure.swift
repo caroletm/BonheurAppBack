@@ -55,7 +55,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(UpdatePlaneteMission2())
     app.migrations.add(UpdatePlanetePhilo())
     app.migrations.add(UpdatePlanetePhilo2())
-//    app.migrations.add(UpdateMapPoint())
+    app.migrations.add(UpdateMapPoint())
     app.migrations.add(UpdateMission())
     app.migrations.add(CreateVisite2())
 //    app.migrations.add(CreateVisiteTest())
@@ -68,8 +68,13 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(DeleteTableMapPoint())
     app.migrations.add(UpdateMapPoint3())
     app.migrations.add(UpdateSouvenirFromUser())
+    app.migrations.add(UpdateSouvenirDefi2())
+    app.migrations.add(DeleteSouvenirMapIdFromMission())
+    app.migrations.add(UpdateSouvenirDefi4())
     
+
 //    app.migrations.add(DeleteSouvenirMapIdFromMapPoint())
+    app.migrations.add(UpdateSouvenirDefi3())
     
     try await app.autoMigrate()
     

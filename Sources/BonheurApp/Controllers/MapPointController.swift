@@ -46,6 +46,7 @@ struct MapPointController: RouteCollection {
         
         guard let user = try await User.query(on: req.db).first() else {
             throw Abort(.notFound, reason: "Utilisateur introuvable")
+            //filtrer par le token de l'utilisateur
         }
         
         guard let planeteSouvenir = try await PlaneteSouvenir.query(on: req.db).first() else {
