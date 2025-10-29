@@ -45,7 +45,7 @@ struct MissionController: RouteCollection {
         guard let planeteId = dto.planeteMissionId else {
             throw Abort(.badRequest, reason: "Missing planeteMissionId")
         }
-        let mission = Mission(nom: dto.nom, planeteMissionID: planeteId)
+        let mission = Mission(nom: dto.nom, planeteMissionID: planeteMission.id!)
         try await mission.save(on: req.db)
         return MissionDTO(
             id: mission.id,

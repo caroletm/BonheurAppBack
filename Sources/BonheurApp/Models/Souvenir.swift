@@ -21,12 +21,13 @@ final class Souvenir : Model, Content, @unchecked Sendable {
     @Parent(key: "user_Id") var user: User
     @Parent(key : "planeteSouvenir_Id") var planeteSouvenir : PlaneteSouvenir
     @OptionalParent(key: "souvenirMap_Id") var souvenirMap: SouvenirMap?
+    @OptionalParent(key: "souvenirDefi_Id") var souvenirDefi: SouvenirDefi?
 //    @OptionalChild(for : \.$souvenir) var souvenirsDefi: SouvenirDefi?
 //    @OptionalChild(for : \.$souvenir) var souvenirsMap: SouvenirMap?
     
     
     init() {}
-    init(id: UUID? = nil, nom: String, photo: String, description: String, theme: SouvenirTheme, type: SouvenirType ,userId: User.IDValue,planeteSouvenirId: PlaneteSouvenir.IDValue, souvenirMapId: SouvenirMap.IDValue) {
+    init(id: UUID? = nil, nom: String, photo: String, description: String, theme: SouvenirTheme, type: SouvenirType ,userId: User.IDValue,planeteSouvenirId: PlaneteSouvenir.IDValue, souvenirMapId: SouvenirMap.IDValue? = nil, souvenirDefiId: SouvenirDefi.IDValue? = nil) {
         self.id = id
         self.nom = nom
         self.photo = photo
@@ -36,6 +37,7 @@ final class Souvenir : Model, Content, @unchecked Sendable {
         self.$user.id = userId
         self.$planeteSouvenir.id = planeteSouvenirId
         self.$souvenirMap.id = souvenirMapId
+        self.$souvenirDefi.id = souvenirDefiId
     }
 }
 
@@ -44,14 +46,16 @@ final class SouvenirDefi: Model, Content, @unchecked Sendable {
     
     @ID(key: .id) var id: UUID?
     @Field(key: "isValidated") var isValidated: Bool
-    @Parent(key: "souvenirId") var souvenir: Souvenir
-    @Parent(key: "souvenirDefi_Id") var mission: Mission
+//    @Parent(key: "souvenirId") var souvenir: Souvenir
+//    @Parent(key: "souvenirDefi_Id") var mission: Mission
+    @OptionalChild(for : \.$souvenirDefi) var souvenir: Souvenir?
+    @Parent(key: "mission_Id") var mission : Mission
     
     init() {}
-    init(id: UUID? = nil, isValidated: Bool, souvenirID: Souvenir.IDValue, missionID : Mission.IDValue) {
+        init(id: UUID? = nil, isValidated: Bool, /*souvenirID: Souvenir.IDValue,*/ missionID : Mission.IDValue) {
         self.id = id
         self.isValidated = isValidated
-        self.$souvenir.id = souvenirID
+//        self.$souvenir.id = souvenirID
         self.$mission.id = missionID
     }
 }

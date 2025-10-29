@@ -68,7 +68,7 @@ struct UpdateSouvenirMap3 : AsyncMigration {
 struct UpdateSouvenirMap4 : AsyncMigration {
     func prepare(on database: any Database) async throws {
         try await database.schema("Souvenir")
-            .field("souvenirMap_Id", .uuid, .required,
+            .field("souvenirMap_Id", .uuid,
                    .references( "SouvenirMap", "id", onDelete: .cascade))
             .update()
     }
@@ -89,6 +89,47 @@ struct UpdateSouvenirFromUser : AsyncMigration {
     func revert(on db: any Database) async throws {
         try await db.schema("Souvenir")
             .deleteField("user_Id")
+            .update()
+    }
+}
+
+struct UpdateSouvenirDefi2 : AsyncMigration {
+    func prepare(on database: any Database) async throws {
+        try await database.schema("SouvenirDefi")
+            .deleteField( "souvenir_id")
+            .update()
+    }
+    func revert(on database: any Database) async throws {
+        try await database.schema("SouvenirDefi")
+        .field("souvenir_id", .uuid)
+        .update()
+    }
+}
+
+struct UpdateSouvenirDefi3 : AsyncMigration {
+    func prepare(on database: any Database) async throws {
+        try await database.schema("Souvenir")
+            .field("souvenirDefi_Id", .uuid,
+                   .references( "SouvenirDefi", "id", onDelete: .cascade))
+            .update()
+    }
+    func revert(on db: any Database) async throws {
+        try await db.schema("Souvenir")
+            .deleteField("souvenirDefi_Id")
+            .update()
+    }
+}
+
+struct UpdateSouvenirDefi4 : AsyncMigration {
+    func prepare(on database: any Database) async throws {
+        try await database.schema("SouvenirDefi")
+            .field("mission_Id", .uuid, .required,
+                    .references("Mission", "id", onDelete: .cascade))
+            .update()
+    }
+    func revert(on db: any Database) async throws {
+        try await db.schema("SouvenirDefi")
+            .deleteField("mission_Id")
             .update()
     }
 }
