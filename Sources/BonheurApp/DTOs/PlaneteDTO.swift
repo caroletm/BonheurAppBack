@@ -28,7 +28,3 @@ struct UpdatePlaneteDTO : Content {
 }
 
 
-struct PlaneteMissionDTO: Content {
-    var id: UUID?
-    var planeteId: UUID
-}
