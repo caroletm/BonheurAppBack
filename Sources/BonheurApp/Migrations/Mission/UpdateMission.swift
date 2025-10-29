@@ -11,7 +11,7 @@ struct UpdateMission : AsyncMigration {
     func prepare(on db: any Database) async throws {
         try await db.schema("Mission")
         
-            .field("souvenirDefi_Id", .uuid, .required,
+            .field("souvenirDefi_Id", .uuid,
                    .references("SouvenirDefi","id", onDelete: .cascade))
             .update()
     }
@@ -21,3 +21,8 @@ struct UpdateMission : AsyncMigration {
             .update()
     }
 }
+//struct UpdatemissionIdNotRequired : AsyncMigration {
+//    func prepare(on database: any Database) async throws {
+//
+//    }
+//}

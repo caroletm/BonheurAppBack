@@ -26,3 +26,9 @@ struct UpdatePlaneteDTO : Content {
     var iconOnboarding : String?
     var backgroundPlanete : String?
 }
+
+
+struct PlaneteMissionDTO: Content {
+    var id: UUID?
+    var planeteId: UUID
+}
