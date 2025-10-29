@@ -14,7 +14,7 @@ struct MissionController: RouteCollection {
             missions.get(use: getAll)
             missions.get(":missionID", use: getById)
             missions.post(use: create)
-            missions.put(":missionID", use: update)
+//            missions.put(":missionID", use: update)
             missions.patch(":missionID", use: patch)
             missions.delete(":missionID", use: delete)
         }
@@ -50,23 +50,23 @@ struct MissionController: RouteCollection {
                 planeteMissionId: planeteId
             )
         }
-    //PUT /missions/:missionID
-    func update(req: Request) async throws -> MissionDTO {
-        guard let mission = try await  Mission.find(req.parameters.get("missionID"), on: req.db) else {
-            throw Abort(.notFound, reason: "mission not found")
-        }
-        let dto = try req.content.decode(MissionDTO.self)
-        mission.nom = dto.nom
-        if let planeteId = dto.planeteMissionId {
-            mission.$planeteMission.id = planeteId
-        }
-        try await mission.update(on: req.db)
-        return MissionDTO(
-            id: mission.id,
-            nom: mission.nom,
-            planeteMissionId: mission.$planeteMission.id
-        )
-    }
+//    //PUT /missions/:missionID
+//    func update(req: Request) async throws -> MissionDTO {
+//        guard let mission = try await  Mission.find(req.parameters.get("missionID"), on: req.db) else {
+//            throw Abort(.notFound, reason: "mission not found")
+//        }
+//        let dto = try req.content.decode(MissionDTO.self)
+//        mission.nom = dto.nom
+//        if let planeteId = dto.planeteMissionId {
+//            mission.$planeteMission.id = planeteId
+//        }
+//        try await mission.update(on: req.db)
+//        return MissionDTO(
+//            id: mission.id,
+//            nom: mission.nom,
+//            planeteMissionId: mission.$planeteMission.id
+//        )
+//    }
     
     //PATCH /missions/:missionID
     func patch(req:Request) async throws -> MissionDTO{
@@ -75,7 +75,7 @@ struct MissionController: RouteCollection {
         }
         let dto = try req.content.decode(PartialMissionDTO.self)
         if let nom = dto.nom {mission.nom = nom}
-        if let planeteId = dto.planeteMissionId{mission.$planeteMission.id = planeteId}
+//        if let planeteId = dto.planeteMissionId{mission.$planeteMission.id = planeteId}
         try await mission.update(on: req.db)
         
         return MissionDTO(

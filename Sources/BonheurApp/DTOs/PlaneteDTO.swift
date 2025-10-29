@@ -26,3 +26,5 @@ struct UpdatePlaneteDTO : Content {
     var iconOnboarding : String?
     var backgroundPlanete : String?
 }
+
+

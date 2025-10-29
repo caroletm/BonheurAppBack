@@ -305,4 +305,12 @@ struct PlaneteController: RouteCollection {
                           iconOnboarding: planete.iconOnboarding,
                           backgroundPlanete: planete.backgroundPlanete)
     }
+    
+    
+
+    
+    
+    
 }
+
+
