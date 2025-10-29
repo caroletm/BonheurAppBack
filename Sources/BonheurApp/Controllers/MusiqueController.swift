@@ -110,4 +110,3 @@ struct MusiqueController: RouteCollection {
 //    Ecrire les fonctions ici :
 //    exemple @Sendable func getAllCitations(_ req: Request) async throws -> Response {...}
     
-}
