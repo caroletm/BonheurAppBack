@@ -55,7 +55,7 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(UpdatePlaneteMission2())
     app.migrations.add(UpdatePlanetePhilo())
     app.migrations.add(UpdatePlanetePhilo2())
-//    app.migrations.add(UpdateMapPoint())
+    app.migrations.add(UpdateMapPoint())
     app.migrations.add(UpdateMission())
     app.migrations.add(CreateVisite2())
 //    app.migrations.add(CreateVisiteTest())
