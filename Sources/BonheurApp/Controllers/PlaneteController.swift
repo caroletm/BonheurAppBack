@@ -25,14 +25,14 @@ struct PlaneteController: RouteCollection {
         }
     }
 
-    // GET/Planetes
+    // GET/planetes
     @Sendable
     func getAllPlanetes(_ req: Request) async throws -> [PlaneteDTO] {
         let planetes = try await Planete.query(on: req.db).all()
         return planetes.map { PlaneteDTO(id : $0.id, nom : $0.nom, description : $0.description, image : $0.image, onboardingDescription: $0.onboardingDescription, iconOnboarding : $0.iconOnboarding, backgroundPlanete : $0.backgroundPlanete) }
     }
     
-    // GET/Planetes/:id
+    // GET/planetes/:id
     @Sendable
     func getPlaneteById(_ req: Request) async throws -> Planete {
         guard let planete = try await Planete.find(req.parameters.get("id"), on: req.db) else {
@@ -41,7 +41,7 @@ struct PlaneteController: RouteCollection {
         return planete
     }
     
-    // POST/Planetes/explo
+    // POST/planetes/explo
     @Sendable
     func createPlaneteExplo(_ req: Request) async throws -> PlaneteDTO {
         let dto = try req.content.decode(PlaneteDTO.self)
@@ -83,7 +83,7 @@ struct PlaneteController: RouteCollection {
         )
     }
     
-    // POST/Planetes/music
+    // POST/planetes/music
     @Sendable
     func createPlaneteMusic(_ req: Request) async throws -> PlaneteDTO {
         let dto = try req.content.decode(PlaneteDTO.self)
@@ -125,7 +125,7 @@ struct PlaneteController: RouteCollection {
         )
     }
     
-    // POST/Planetes/philo
+    // POST/planetes/philo
     @Sendable
     func createPlanetePhilo(_ req: Request) async throws -> PlaneteDTO {
         let dto = try req.content.decode(PlaneteDTO.self)
@@ -167,7 +167,7 @@ struct PlaneteController: RouteCollection {
         )
     }
     
-    // POST/Planetes/mission
+    // POST/planetes/mission
     @Sendable
     func createPlaneteMission(_ req: Request) async throws -> PlaneteDTO {
         let dto = try req.content.decode(PlaneteDTO.self)
@@ -209,7 +209,7 @@ struct PlaneteController: RouteCollection {
         )
     }
     
-    // POST/Planetes/souvenir
+    // POST/planetes/souvenir
     @Sendable
     func createPlaneteSouvenir(_ req: Request) async throws -> PlaneteDTO {
         let dto = try req.content.decode(PlaneteDTO.self)
@@ -251,7 +251,7 @@ struct PlaneteController: RouteCollection {
         )
     }
     
-    //DELETE/Planetes/:id
+    //DELETE/planetes/:id
     @Sendable
     func deletePlaneteById(_ req: Request) async throws -> Response {
         guard let planete = try await Planete.find(req.parameters.get("id"), on: req.db) else {
@@ -261,7 +261,7 @@ struct PlaneteController: RouteCollection {
         return Response(status: .noContent)
     }
     
-    //PATCH/Planetes/:id
+    //PATCH/planetes/:id
     @Sendable
     func updatePlaneteById(_ req: Request) async throws -> PlaneteDTO {
         let dto = try req.content.decode(UpdatePlaneteDTO.self)

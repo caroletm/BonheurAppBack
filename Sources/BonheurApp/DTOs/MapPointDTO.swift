@@ -17,3 +17,12 @@ struct MapPointDTO: Content {
     var longitude: Double
     var planeteExploId: UUID?
 }
+
+struct UpdateMapPointDTO: Content {
+    var nom: String?
+    var photo : String?
+    var theme: SouvenirTheme?
+    var description: String?
+    var latitude: Double?
+    var longitude: Double?
+}
