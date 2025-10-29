@@ -14,8 +14,6 @@ struct SouvenirDTO: Content {
     var theme: SouvenirTheme
     var type: SouvenirType
     var date: Date?
-    var userId: UUID
-    var planeteSouvenirId: UUID
 }
 
 struct CreateSouvenirFromMissionDTO: Content {
