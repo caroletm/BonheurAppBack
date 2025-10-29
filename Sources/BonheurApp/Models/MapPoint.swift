@@ -19,7 +19,8 @@ final class MapPoint : Model, Content, @unchecked Sendable {
     @Field(key: "description") var description : String
     @Field(key : "latitude") var latitude: Double
     @Field(key : "longitude") var longitude: Double
-    @OptionalChild(for : \.$mapPoint) var souvenirMap : SouvenirMap?
+    @Children(for : \.$mapPoint) var mapPoint_Id : [SouvenirMap]
+
     
     init() {}
     init(id: UUID, planeteExploID: PlaneteExplo.IDValue, nom: String, photo: String?, theme: SouvenirTheme, description: String, latitude: Double, longitude: Double) {

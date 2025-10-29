@@ -11,6 +11,7 @@ import Vapor
 struct UpdateUser: AsyncMigration {
     func prepare(on db: any Database) async throws {
         try await db.schema("users")
+        
             .field("nom", .string,.required)
             .field("motDePasse", .string,.required)
             .update()

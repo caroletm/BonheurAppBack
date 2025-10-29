@@ -30,6 +30,7 @@ struct UserController: RouteCollection {
         }
     
     @Sendable
+    //    /users/login
     func login(req: Request) async throws -> String {
         let userData = try req.content.decode(loginRequest.self)
         
