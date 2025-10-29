@@ -11,10 +11,13 @@ import Vapor
 struct MusiqueController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
         let musiques = routes.grouped("musiques")
-        
-//Ecrire les methodes ici :
-//exemple : citations.get(use : getAllCitations
-        
+        musiques.get(use: getAll) // GET /musiques
+        musiques.get(":musiqueID", use: getById) // GET /musiques/:musiqueID
+        musiques.post(use: create) // POST /musiques
+        musiques.put(":musiqueID", use: update) // PUT /musiques/:musiqueID
+        musiques.patch(":musiqueID", use: patch) // PATCH /musiques/:musiqueID
+        musiques.delete(":musiqueID", use: delete) // DELETE /musiques/:musiqueID
+       }
     }
     
     //GET /musiques
