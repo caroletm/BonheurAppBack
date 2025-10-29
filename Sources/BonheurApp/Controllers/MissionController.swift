@@ -10,14 +10,14 @@ import Fluent
 
 struct MissionController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
-            let missions = routes.grouped("missions")
-            missions.get(use: getAll)
-            missions.get(":missionID", use: getById)
-            missions.post(use: create)
-//            missions.put(":missionID", use: update)
-            missions.patch(":missionID", use: patch)
-            missions.delete(":missionID", use: delete)
-        }
+        let missions = routes.grouped("missions")
+        missions.get(use: getAll)
+        missions.get(":missionID", use: getById)
+        missions.post(use: create)
+        //            missions.put(":missionID", use: update)
+        missions.patch(":missionID", use: patch)
+        missions.delete(":missionID", use: delete)
+    }
     //GET /missions
     func getAll(req: Request) async throws -> [MissionDTO] {
         let missions = try await Mission.query(on: req.db).with(\.$planeteMission).all()
@@ -27,46 +27,49 @@ struct MissionController: RouteCollection {
     }
     //GET /missions/:missionID
     func getById(req: Request) async throws -> MissionDTO {
-            guard let mission = try await Mission.find(req.parameters.get("missionID"), on: req.db) else {
-                throw Abort(.notFound, reason: "Mission not found")
-            }
-            return MissionDTO(
-                id: mission.id,
-                nom: mission.nom,
-                planeteMissionId: mission.$planeteMission.id
-            )
+        guard let mission = try await Mission.find(req.parameters.get("missionID"), on: req.db) else {
+            throw Abort(.notFound, reason: "Mission not found")
         }
+        return MissionDTO(
+            id: mission.id,
+            nom: mission.nom,
+            planeteMissionId: mission.$planeteMission.id
+        )
+    }
     //POST /missions
     func create(req: Request) async throws -> MissionDTO {
-            let dto = try req.content.decode(MissionDTO.self)
-            guard let planeteId = dto.planeteMissionId else {
-                throw Abort(.badRequest, reason: "Missing planeteMissionId")
-            }
-            let mission = Mission(nom: dto.nom, planeteMissionID: planeteId)
-            try await mission.save(on: req.db)
-            return MissionDTO(
-                id: mission.id,
-                nom: mission.nom,
-                planeteMissionId: planeteId
-            )
+        let dto = try req.content.decode(MissionDTO.self)
+        guard let planeteMission = try await PlaneteMission.query(on: req.db).first() else {
+            throw Abort(.notFound, reason : "Planete Explo introuvable")
         }
-//    //PUT /missions/:missionID
-//    func update(req: Request) async throws -> MissionDTO {
-//        guard let mission = try await  Mission.find(req.parameters.get("missionID"), on: req.db) else {
-//            throw Abort(.notFound, reason: "mission not found")
-//        }
-//        let dto = try req.content.decode(MissionDTO.self)
-//        mission.nom = dto.nom
-//        if let planeteId = dto.planeteMissionId {
-//            mission.$planeteMission.id = planeteId
-//        }
-//        try await mission.update(on: req.db)
-//        return MissionDTO(
-//            id: mission.id,
-//            nom: mission.nom,
-//            planeteMissionId: mission.$planeteMission.id
-//        )
-//    }
+        guard let planeteId = dto.planeteMissionId else {
+            throw Abort(.badRequest, reason: "Missing planeteMissionId")
+        }
+        let mission = Mission(nom: dto.nom, planeteMissionID: planeteId)
+        try await mission.save(on: req.db)
+        return MissionDTO(
+            id: mission.id,
+            nom: mission.nom,
+            planeteMissionId: planeteMission.id
+        )
+    }
+    //    //PUT /missions/:missionID
+    //    func update(req: Request) async throws -> MissionDTO {
+    //        guard let mission = try await  Mission.find(req.parameters.get("missionID"), on: req.db) else {
+    //            throw Abort(.notFound, reason: "mission not found")
+    //        }
+    //        let dto = try req.content.decode(MissionDTO.self)
+    //        mission.nom = dto.nom
+    //        if let planeteId = dto.planeteMissionId {
+    //            mission.$planeteMission.id = planeteId
+    //        }
+    //        try await mission.update(on: req.db)
+    //        return MissionDTO(
+    //            id: mission.id,
+    //            nom: mission.nom,
+    //            planeteMissionId: mission.$planeteMission.id
+    //        )
+    //    }
     
     //PATCH /missions/:missionID
     func patch(req:Request) async throws -> MissionDTO{
@@ -75,7 +78,7 @@ struct MissionController: RouteCollection {
         }
         let dto = try req.content.decode(PartialMissionDTO.self)
         if let nom = dto.nom {mission.nom = nom}
-//        if let planeteId = dto.planeteMissionId{mission.$planeteMission.id = planeteId}
+        //        if let planeteId = dto.planeteMissionId{mission.$planeteMission.id = planeteId}
         try await mission.update(on: req.db)
         
         return MissionDTO(
@@ -93,4 +96,5 @@ struct MissionController: RouteCollection {
         try await mission.delete(on: req.db)
         return .noContent
     }
+    
 }

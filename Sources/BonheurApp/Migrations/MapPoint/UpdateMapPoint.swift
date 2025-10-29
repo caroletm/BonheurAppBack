@@ -7,20 +7,20 @@
 
 import Fluent
 
-//struct UpdateMapPoint : AsyncMigration {
-//    func prepare(on db: any Database) async throws {
-//        try await db.schema("MapPoint")
-//        
-//        .field("souvenirMap_Id", .uuid, .required,
-//            .references("SouvenirMap","id", onDelete: .cascade))
-//        .update()
-//    }
-//    func revert(on db: any Database) async throws {
-//        try await db.schema("MapPoint")
-//            .deleteField("souvenirMap_Id")
-//            .update()
-//    }
-//}
+struct UpdateMapPoint : AsyncMigration {
+    func prepare(on db: any Database) async throws {
+        try await db.schema("MapPoint")
+        
+        .field("souvenirMap_Id", .uuid, .required,
+            .references("SouvenirMap","id", onDelete: .cascade))
+        .update()
+    }
+    func revert(on db: any Database) async throws {
+        try await db.schema("MapPoint")
+            .deleteField("souvenirMap_Id")
+            .update()
+    }
+}
 
 struct UpdateMapPoint2 : AsyncMigration {
     func prepare(on db: any Database) async throws {
@@ -65,16 +65,16 @@ struct UpdateMapPoint3 : AsyncMigration {
     }
 }
 
-//struct DeleteSouvenirMapIdFromMapPoint: AsyncMigration {
-//    func prepare(on db: any Database) async throws {
-//        try await db.schema("MapPoint")
-//            .deleteField("souvenirMap_Id")
-//            .update()
-//    }
-//
-//    func revert(on db: any Database) async throws {
-//        try await db.schema("MapPoint")
-//            .field("souvenirMap_Id", .uuid)
-//            .update()
-//    }
-//}
+struct DeleteSouvenirMapIdFromMapPoint: AsyncMigration {
+    func prepare(on db: any Database) async throws {
+        try await db.schema("MapPoint")
+            .deleteField("souvenirMap_Id")
+            .update()
+    }
+
+    func revert(on db: any Database) async throws {
+        try await db.schema("MapPoint")
+            .field("souvenirMap_Id", .uuid)
+            .update()
+    }
+}
