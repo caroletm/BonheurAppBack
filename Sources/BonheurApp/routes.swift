@@ -19,5 +19,6 @@ func routes(_ app: Application) throws {
     try app.register(collection: VisiteController())
     try app.register(collection: UserController())
     try app.register(collection: PlaneteController())
+    try app.register(collection: MapPointController())
     
 }
