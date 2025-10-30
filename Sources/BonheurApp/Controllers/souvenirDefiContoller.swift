@@ -40,7 +40,7 @@ struct souvenirDefiController: RouteCollection{
         }
         let souvenir = Souvenir(
             id: UUID(),
-            nom: dto.nom,
+            nom: mission.nom,
             photo: dto.photo ?? "",
             description: dto.description,
             theme: dto.theme,
@@ -58,10 +58,7 @@ struct souvenirDefiController: RouteCollection{
             theme: souvenir.theme,
             description: souvenir.description,
             planetedMission: mission.id
-        )
-        
-        
-       
+        )  
     }
     
 }
