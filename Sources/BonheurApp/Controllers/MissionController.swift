@@ -17,6 +17,7 @@ struct MissionController: RouteCollection {
         //            missions.put(":missionID", use: update)
         missions.patch(":missionID", use: patch)
         missions.delete(":missionID", use: delete)
+        
     }
     //GET /missions
     func getAll(req: Request) async throws -> [MissionDTO] {
@@ -42,9 +43,7 @@ struct MissionController: RouteCollection {
         guard let planeteMission = try await PlaneteMission.query(on: req.db).first() else {
             throw Abort(.notFound, reason : "Planete Explo introuvable")
         }
-        guard let planeteId = dto.planeteMissionId else {
-            throw Abort(.badRequest, reason: "Missing planeteMissionId")
-        }
+        
         let mission = Mission(nom: dto.nom, planeteMissionID: planeteMission.id!)
         try await mission.save(on: req.db)
         return MissionDTO(
@@ -96,5 +95,12 @@ struct MissionController: RouteCollection {
         try await mission.delete(on: req.db)
         return .noContent
     }
+    
+    
+    
+    
+
+    
+    
     
 }

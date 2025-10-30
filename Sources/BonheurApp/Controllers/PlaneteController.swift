@@ -17,11 +17,13 @@ struct PlaneteController: RouteCollection {
         planetes.post("philo", use: createPlanetePhilo)
         planetes.post("mission", use: createPlaneteMission)
         planetes.post("souvenir", use: createPlaneteSouvenir)
-        
+       
         planetes.group(":id") { planete in
             planete.get(use: getPlaneteById)
             planete.delete(use: deletePlaneteById)
             planete.patch(use: updatePlaneteById)
+            planete.get("mission", use: getPlaneteMission)
+            
         }
     }
 
@@ -307,6 +309,24 @@ struct PlaneteController: RouteCollection {
     }
     
     
+    
+    // GET /planetes/:planeteID/mission
+    func getPlaneteMission(req: Request) async throws -> PlaneteMissionDTO {
+        guard let planeteId = req.parameters.get("id", as: UUID.self) else {
+            throw Abort(.badRequest)
+        }
+        
+        guard let planeteMission = try await PlaneteMission.query(on: req.db)
+            .filter(\.$planete.$id == planeteId)
+            .first() else {
+            throw Abort(.notFound, reason: "PlaneteMission not found for this planete")
+        }
+        
+        return PlaneteMissionDTO(
+            id: planeteMission.id,
+            planeteId: planeteMission.$planete.id
+        )
+    }
 
     
     
