@@ -78,14 +78,14 @@ public func configure(_ app: Application) async throws {
     
     try await app.autoMigrate()
     
-    //Test rapide de connexion
-    if let sql = app.db(.mysql) as? (any SQLDatabase) {
-        sql.raw("SELECT 1").run().whenComplete { response in
-            print(response)
-        }
-    } else {
-        print("⚠️ Le driver SQL n'est pas disponible (cast vers SQLDatabase impossible)")
-    }
+//    //Test rapide de connexion
+//    if let sql = app.db(.mysql) as? (any SQLDatabase) {
+//        sql.raw("SELECT 1").run().whenComplete { response in
+//            print(response)
+//        }
+//    } else {
+//        print("⚠️ Le driver SQL n'est pas disponible (cast vers SQLDatabase impossible)")
+//    }
 
     // register routes
     try routes(app)

@@ -19,12 +19,20 @@ struct PartialUserDTO: Content {
     var motDePasse: String?
 }
 struct UtilisateurDTO: Content{
-    let id: UUID?
-    let email: String
-    let nom: String
+    var id: UUID?
+    var email: String
+    var nom: String
     func toModel() -> User{
         return User(id: id, email: email, nom: nom, motDePasse: "default")
     }
     
 }
+
+struct UserCreateDTO: Content {
+    var email: String
+    var nom: String
+    var motDePasse: String
+}
+
+
 
