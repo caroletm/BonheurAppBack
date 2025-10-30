@@ -58,10 +58,7 @@ struct souvenirDefiController: RouteCollection{
             theme: souvenir.theme,
             description: souvenir.description,
             planetedMission: mission.id
-        )
-        
-        
-       
+        )  
     }
     
 }
