@@ -14,7 +14,8 @@ struct VisiteController: RouteCollection {
         visites.get("user", ":userID", use: getByUser)
         visites.get("planete", ":planeteID", use: getByPlanete)
         visites.get("stats", use: getStats)
-        visites.post(use: create)
+        let protected = visites.grouped(JWTMiddleware())
+            protected.post(use: create)
         visites.delete(":visiteID", use: delete)
     }
     //GET /vivites
@@ -73,35 +74,27 @@ struct VisiteController: RouteCollection {
     }
     //POST /visites
     func create(req: Request) async throws -> VisiteDTO {
-        let dto = try req.content.decode(VisiteDTO.self)
         
-        guard try await User.find(dto.userId, on: req.db) != nil else {
-            throw Abort(.notFound, reason: "User not found")
+        
+        guard let payload = req.auth.get(UserPayload.self) else {
+            throw Abort(.unauthorized, reason: "Utilisateur non authentifié")
         }
         
-        guard try await Planete.find(dto.planeteId, on: req.db) != nil else {
-            throw Abort(.notFound, reason: "Planete not found")
+        guard let user = try await User.find(payload.id, on: req.db) else {
+            throw Abort(.notFound, reason: "Utilisateur introuvable")
         }
         
-        let existingVisite = try await Visite.query(on: req.db)
-            .filter(\.$user.$id == dto.userId)
-            .filter(\.$planete.$id == dto.planeteId)
-            .first()
+        let dto = try req.content.decode(VisiteCreateDTO.self)
         
-        if let existing = existingVisite {
-            return VisiteDTO(
-                id: existing.id,
-                dateTime: existing.dateTime,
-                userId: existing.$user.id,
-                planeteId: existing.$planete.id
-            )
-        }
+        guard let planete = try await Planete.find(dto.planeteId, on: req.db) else {
+                throw Abort(.notFound, reason: "Planète introuvable")
+            }
         
         let visite = Visite(
             id: UUID(),
             dateTime: Date(),
-            userID: dto.userId,
-            planeteID: dto.planeteId
+            userID: user.id!,
+            planeteID: planete.id!
         )
         
         try await visite.save(on: req.db)
@@ -155,8 +148,9 @@ struct VisiteController: RouteCollection {
             planeteLaPlusVisitee: mostVisitedPlaneteName
         )
     }
-
+    
     
     
     
 }
+
