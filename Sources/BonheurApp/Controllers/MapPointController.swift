@@ -24,7 +24,7 @@ struct MapPointController: RouteCollection {
     @Sendable
     func getAllMapPoints(_ req: Request) async throws -> [MapPointDTO] {
         let mapPoint = try await MapPoint.query(on: req.db).all()
-        return mapPoint.map { MapPointDTO(id : $0.id, nom : $0.nom, photo: $0.photo ?? "photoDog", theme : $0.theme, description: $0.description, latitude : $0.latitude, longitude: $0.longitude ) }
+        return mapPoint.map { MapPointDTO(id : $0.id, nom : $0.nom, photo: $0.photo ?? "", theme : $0.theme, description: $0.description, latitude : $0.latitude, longitude: $0.longitude ) }
     }
     
     @Sendable
@@ -77,7 +77,7 @@ struct MapPointController: RouteCollection {
         let souvenir = Souvenir(
             id: UUID(),
             nom: dto.nom,
-            photo: dto.photo ?? "photoDog",
+            photo: dto.photo ?? "",
             description: dto.description,
             theme: dto.theme,
             type: .mapInsert,
