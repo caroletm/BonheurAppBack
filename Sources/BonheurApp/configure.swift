@@ -5,6 +5,7 @@ import Vapor
 import FluentSQL
 import JWT
 import FluentSQLiteDriver
+import Gatekeeper
 
 // configures your application
 public func configure(_ app: Application) async throws {
@@ -22,8 +23,13 @@ public func configure(_ app: Application) async throws {
     }
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-
     
+    let corsMiddleware = CORSMiddleware(configuration: corsConfiguration)
+    app.middleware.use(corsMiddleware)
+    
+    app.caches.use(.memory)
+    app.gatekeeper.config = .init(maxRequests: 100, per: .minute)
+    app.middleware.use(GatekeeperMiddleware())
 
 //    app.migrations.add(CreateTodo())
     
