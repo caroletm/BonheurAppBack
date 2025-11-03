@@ -28,9 +28,12 @@ struct UserController: RouteCollection {
         
             
         }
-    
+    struct LoginResponse: Content {
+        let token: String
+    }
     @Sendable
-    func login(req: Request) async throws -> String {
+    //    /users/login
+    func login(req: Request) async throws -> LoginResponse {
         let userData = try req.content.decode(loginRequest.self)
         
         guard let user = try await User.query(on: req.db)
@@ -43,8 +46,8 @@ struct UserController: RouteCollection {
         }
         let payload = UserPayload(id: user.id!)
         let signer = JWTSigner.hs256(key: "IM_BATMAN")
-        let tokene = try signer.sign(payload)
-        return tokene
+        let token = try signer.sign(payload)
+        return LoginResponse(token: token)
     }
     
     @Sendable
@@ -77,11 +80,23 @@ struct UserController: RouteCollection {
     
     // POST /users
     func create(req: Request) async throws -> UtilisateurDTO {
-        let user = try req.content.decode(User.self)
-        user.motDePasse = try Bcrypt.hash(user.motDePasse)
+        var userDTO = try req.content.decode(UserCreateDTO.self)
+        userDTO.motDePasse = try Bcrypt.hash(userDTO.motDePasse)
+
+        let existingUser = try await User.query(on: req.db)
+            .filter(\.$email == userDTO.email)
+            .first()
+        if existingUser != nil {
+            throw Abort(.conflict, reason: "Cet email est deja utiliser")
+        }
+        let user = User()
+        user.email = userDTO.email
+        user.nom = userDTO.nom
+        user.motDePasse = userDTO.motDePasse
         try await user.save(on: req.db)
         return user.toDTO()
     }
+
     
     //PUT /users/:userID
     

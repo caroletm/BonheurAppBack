@@ -17,6 +17,10 @@ struct MissionDTO: Content {
 
 struct PartialMissionDTO: Content {
     var nom: String?
-    var planeteMissionId: UUID?
+   
 }
 
+struct PlaneteMissionDTO: Content {
+    var id: UUID?
+    var planeteId: UUID
+}

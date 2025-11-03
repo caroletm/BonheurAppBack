@@ -5,6 +5,7 @@ import Vapor
 import FluentSQL
 import JWT
 import FluentSQLiteDriver
+import Gatekeeper
 
 // configures your application
 public func configure(_ app: Application) async throws {
@@ -20,10 +21,17 @@ public func configure(_ app: Application) async throws {
             database: Environment.get("DATABASE_NAME") ?? "BonheurApp"
         ), as: .mysql)
     }
+    
+
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-
     
+    let corsMiddleware = CORSMiddleware(configuration: corsConfiguration)
+    app.middleware.use(corsMiddleware)
+    
+    app.caches.use(.memory)
+    app.gatekeeper.config = .init(maxRequests: 100, per: .minute)
+    app.middleware.use(GatekeeperMiddleware())
 
 //    app.migrations.add(CreateTodo())
     
@@ -62,17 +70,37 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(UpdateVisite())
     app.migrations.add(UpdateMapPoint2())
     app.migrations.add(AddRoleToUser())
+    app.migrations.add(UpdateSouvenirMap2())
+    app.migrations.add(UpdateSouvenirMap3())
+    app.migrations.add(UpdateSouvenirMap4())
+    app.migrations.add(DeleteTableMapPoint())
+    app.migrations.add(UpdateMapPoint3())
+    app.migrations.add(UpdateSouvenirFromUser())
+    app.migrations.add(UpdateSouvenirDefi2())
+    app.migrations.add(DeleteSouvenirMapIdFromMission())
+    app.migrations.add(UpdateSouvenirDefi4())
+//    app.migrations.add(DeleteSouvenirMapIdFromMapPoint())
+    app.migrations.add(UpdateSouvenirDefi3())
     
     try await app.autoMigrate()
     
-    //Test rapide de connexion
-    if let sql = app.db(.mysql) as? (any SQLDatabase) {
-        sql.raw("SELECT 1").run().whenComplete { response in
-            print(response)
-        }
-    } else {
-        print("⚠️ Le driver SQL n'est pas disponible (cast vers SQLDatabase impossible)")
-    }
+    // ✅ Utiliser un encodage de date en timestamp
+    let jsonEncoder = JSONEncoder()
+    jsonEncoder.dateEncodingStrategy = .secondsSince1970
+    ContentConfiguration.global.use(encoder: jsonEncoder, for: .json)
+    
+    let jsonDecoder = JSONDecoder()
+    jsonDecoder.dateDecodingStrategy = .secondsSince1970
+    ContentConfiguration.global.use(decoder: jsonDecoder, for: .json)
+    
+//    //Test rapide de connexion
+//    if let sql = app.db(.mysql) as? (any SQLDatabase) {
+//        sql.raw("SELECT 1").run().whenComplete { response in
+//            print(response)
+//        }
+//    } else {
+//        print("⚠️ Le driver SQL n'est pas disponible (cast vers SQLDatabase impossible)")
+//    }
 
     // register routes
     try routes(app)

@@ -16,7 +16,8 @@ final class User : Model, Content, @unchecked Sendable {
     @Field(key: "nom") var nom: String
     @Field(key: "motDePasse") var motDePasse: String
     @Enum(key: "role") var role: UserRole
-    @Children(for : \.$user) var visite: [Visite]
+    @Children(for : \.$user) var visites: [Visite]
+    @Children(for : \.$user) var souvenirs: [Souvenir]
 
     
     init() {
