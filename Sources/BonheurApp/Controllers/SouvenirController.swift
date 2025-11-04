@@ -15,6 +15,8 @@ struct SouvenirController: RouteCollection {
         
         souvenirs.group(":id") { souvenir in
             souvenir.get(use: getSouvenirById)
+            souvenir.delete(use: deleteSouvenirById)
+            souvenir.patch(use: updateSouvenirById)
             
         }
         
@@ -33,6 +35,65 @@ struct SouvenirController: RouteCollection {
                 throw Abort(.notFound)
             }
             return souvenir
+        }
+        
+        //DELETE/souvenirs/id:
+        @Sendable
+        func deleteSouvenirById(_ req: Request) async throws -> Response {
+            guard let id = req.parameters.get("id", as: UUID.self),
+                  let souvenir = try await Souvenir.find(id, on: req.db) else {
+                throw Abort(.notFound, reason: "Souvenir introuvable")
+            }
+            try await souvenir.delete(on: req.db)
+            return Response(status: .noContent)
+        }
+        
+        //PATCH/souvenirs/id:
+        @Sendable
+        func updateSouvenirById(_ req: Request) async throws -> SouvenirDTO {
+            
+            let dto = try req.content.decode(UpdateSouvenirDTO.self)
+            
+            guard dto.nom != nil ||
+                    dto.photo != nil ||
+                    dto.description != nil ||
+                    dto.theme != nil ||
+                    dto.type != nil else {
+                throw Abort(.badRequest, reason: "Rien à modifier")
+            }
+            
+            guard let id = req.parameters.get("id", as : UUID.self),
+                  let souvenir = try await Souvenir.find(id, on: req.db) else
+            
+            {
+                throw Abort(.notFound, reason : "id introuvable")
+            }
+            
+            if let n = dto.nom { souvenir.nom = n }
+            if let p = dto.photo { souvenir.photo = p }
+            if let d = dto.description { souvenir.description = d }
+            if let t = dto.theme { souvenir.theme = t }
+            if let ty = dto.type { souvenir.type = ty }
+            
+            if try await Souvenir.query(on: req.db)
+                .filter(\.$nom == souvenir.nom)
+                .filter(\.$photo == souvenir.photo)
+                .filter(\.$description == souvenir.description)
+                .filter(\.$theme == souvenir.theme)
+                .filter(\.$type == souvenir.type)
+                .first() != nil {
+                throw Abort(.badRequest, reason: "Un souvenir existe deja")
+            }
+            try await souvenir.save(on: req.db)
+            
+            return SouvenirDTO(
+                id: souvenir.id,
+                nom: souvenir.nom,
+                photo : souvenir.photo,
+                description: souvenir.description,
+                theme: souvenir.theme,
+                type: souvenir.type
+            )
         }
     }
 }
