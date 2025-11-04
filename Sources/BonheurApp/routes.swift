@@ -20,8 +20,6 @@ func routes(_ app: Application) throws {
     try app.register(collection: UserController())
     try app.register(collection: PlaneteController())
     try app.register(collection: MusiqueController())
-//    try app.register(collection: MapPointController())
-//    try app.register(collection: SouvenirController())
     try app.register(collection: souvenirDefiController())
     
 }
