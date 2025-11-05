@@ -10,7 +10,7 @@ import Vapor
 
 struct MapPointController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
-        let mapPoints = routes.grouped("mapPoints")
+        let mapPoints = routes.grouped("mapPoints").grouped(JWTMiddleware())
         mapPoints.get(use: getAllMapPoints)
         mapPoints.post(use: createMapPoint)
         
@@ -44,9 +44,16 @@ struct MapPointController: RouteCollection {
             throw Abort(.notFound, reason : "Planete Explo introuvable")
         }
         
-        guard let user = try await User.query(on: req.db).first() else {
+        
+        let payload = try req.auth.require(UserPayload.self)
+        
+        guard let user = try await User.find(payload.id, on: req.db) else {
             throw Abort(.notFound, reason: "Utilisateur introuvable")
-            //filtrer par le token de l'utilisateur
+            //filtrer par le token de l'utilisateur)
+            
+//        guard let user = try await User.query(on: req.db).first() else {
+//            throw Abort(.notFound, reason: "Utilisateur introuvable")
+//            //filtrer par le token de l'utilisateur
         }
         
         guard let planeteSouvenir = try await PlaneteSouvenir.query(on: req.db).first() else {
