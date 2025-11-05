@@ -10,7 +10,7 @@ import Vapor
 
 struct SouvenirController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
-        let souvenirs = routes.grouped("souvenirs")
+        let souvenirs = routes.grouped("souvenirs").grouped(JWTMiddleware())
         souvenirs.get(use: getAllSouvenirs)
         
         souvenirs.group(":id") { souvenir in
