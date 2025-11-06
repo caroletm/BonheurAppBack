@@ -10,14 +10,13 @@ import Vapor
 
 struct SouvenirController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
-        let souvenirs = routes.grouped("souvenirs").grouped(JWTMiddleware())
+        let souvenirs = routes.grouped("souvenirs")
         souvenirs.get(use: getAllSouvenirs)
         
         souvenirs.group(":id") { souvenir in
             souvenir.get(use: getSouvenirById)
             souvenir.delete(use: deleteSouvenirById)
             souvenir.patch(use: updateSouvenirById)
-            
         }
         
         // GET/souvenirs
